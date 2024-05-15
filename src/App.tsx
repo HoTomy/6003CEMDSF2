@@ -4,9 +4,10 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 import BookList from './components/DogList';
+import DogAPI from './components/Dogapi1';
 
 import ApplicationForm from './components/ApplicationForm';
-im
+
 
 const { Header, Content, Footer } = Layout;
 
@@ -22,6 +23,7 @@ export default function App() {
             <Link to="/Login">Login</Link>
             <Link to="/Register">Register</Link>
             <Link to="/ApplicationForm">Application Form</Link>
+            <Link to="/Dogapi1">Dog API</Link>
           </Space>
         </nav>
       </Header>
@@ -32,10 +34,11 @@ export default function App() {
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/ApplicationForm" element={<ApplicationForm />} />
+          <Route path="/Dogapi1" element={<DogAPI />} />
         </Routes>
       </Content>
       <Footer>
-        <p>OnLine BookStore</p>
+        <p>Dog Shelter</p>
       </Footer>
     </Router>
   )

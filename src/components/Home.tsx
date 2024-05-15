@@ -20,6 +20,9 @@ function Home() {
         <Link to="/ApplicationForm">
           <button>Application Form</button>
         </Link>
+        <Link to="/Dogaip1">
+          <button>Dog API</button>
+        </Link>
       </div>
     </div>
   );
