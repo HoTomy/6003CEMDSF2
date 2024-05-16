@@ -1,3 +1,5 @@
 export const api = {
-  uri: "https://api.thedogapi.com/v1/"
+  uri: "https://ap-southeast-1.aws.data.mongodb-api.com/app/data-haqcxsh/endpoint/data/v1"
 }
+
+

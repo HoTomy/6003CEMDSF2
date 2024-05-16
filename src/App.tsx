@@ -19,11 +19,11 @@ export default function App() {
         <nav>
           <Space>
             <Link to="/">Home</Link>
-            <Link to="/BookList">DogList</Link>
+            <Link to="/DogList">DogList</Link>
             <Link to="/Login">Login</Link>
             <Link to="/Register">Register</Link>
             <Link to="/ApplicationForm">Application Form</Link>
-            <Link to="/Dogapi1">Dog API</Link>
+            <Link to="/Dogapi1">Search Dog Breed</Link>
           </Space>
         </nav>
       </Header>
@@ -38,7 +38,7 @@ export default function App() {
         </Routes>
       </Content>
       <Footer>
-        <p>Dog Shelter</p>
+        <p>The Canine Shelter @ May 2024</p>
       </Footer>
     </Router>
   )
