@@ -24,6 +24,7 @@
     "antd": "^5.17.0",
     "axios": "^1.6.8",
     "buffer": "^6.0.3",
+    "mongodb": "^6.6.2",
     "react-router-dom": "^6.23.0"
   }
 }
