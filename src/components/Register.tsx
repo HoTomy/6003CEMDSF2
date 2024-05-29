@@ -16,7 +16,7 @@ const Register = () => {
     const sign_up_code = values.sign_up_code;
     console.log(values, username, password, email, staff, sign_up_code);
 
-    if (staff == 'T' && sign_up_code == '997021171') {
+    if (staff == 'T' && sign_up_code == '227021171') {
       const postUser = {
         username: username,
         password: password,
@@ -46,7 +46,7 @@ const Register = () => {
           console.log(res.data);
         });
 
-    } else if (staff == 'T' && sign_up_code != '997021171') {
+    } else if (staff == 'T' && sign_up_code != '227021171') {
       message.error('Incorrect sign up code !');
     } else {
 

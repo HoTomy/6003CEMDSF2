@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const { Option } = Select;
 
-const Dog = () => {
+const Dogs = () => {
   const [dogs, setDogs] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [breedFilter, setBreedFilter] = React.useState('');
@@ -39,7 +39,9 @@ const Dog = () => {
   const filteredDogs = dogs?.filter((dog) =>
     dog.breeds.toLowerCase().includes(breedFilter.toLowerCase()) &&
     (genderFilter === '' || dog.gender.toLowerCase() === genderFilter.toLowerCase()) &&
-    (centerFilter === '' || dog.centre.toLowerCase() === centerFilter.toLowerCase())
+    (centerFilter === '' || dog.centre.toLowerCase() === centerFilter.toLowerCase()) &&
+    dog.status.toLowerCase() === 'available'
+
   );
 
   if (loading) {
@@ -86,15 +88,15 @@ const Dog = () => {
             {filteredDogs.length === 0 ? (
               <div>No dogs match the filter criteria.</div>
             ) : (
-              filteredDogs.map(({ id, name, breeds, gender, centre, imageurl, birth, remark, status}) => (
-                <Col span={8} key={id}>
-                  <Card title={name} style={{ width: 400, height:600 }}>
+              filteredDogs.map(({ id, name, breeds, gender, centre, imageurl, birth, remark, status }) => (
+                <Col span={8} key={name}>
+                  <Card title={name} style={{ width: 400, height: 600 }}>
                     <Image width={300} height={300} src={imageurl} />
-                    <pre>ID:  {id}    Centre:  {centre}    Gender:  {gender}</pre>
+                    <pre>ID: {id}    Centre:  {centre}    Gender:  {gender}</pre>
                     <pre>Birth:  {birth}    Status:  {status}</pre>
                     <pre>Breed:  {breeds}</pre>
                     <pre>Remark:  {remark}</pre>
-                    
+
                     <p></p>
                     <Space wrap>
 
@@ -110,4 +112,4 @@ const Dog = () => {
   }
 };
 
-export default Dog;
+export default Dogs;

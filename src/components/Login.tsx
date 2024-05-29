@@ -2,14 +2,12 @@ import React from "react";
 import { Form, Input, Button, Space, message } from 'antd';
 import axios from "axios";
 import { api } from './common/http-common';
-import { useNavigate, Link } from 'react-router-dom';
-import Dogs2 from '../components/Dogs2'
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Buffer } from 'buffer';
-
-
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleFormSubmit = (values: any) => {
     const username = values.username;
@@ -25,7 +23,7 @@ const Login = () => {
           localStorage.setItem('atoken', access_token);
           localStorage.setItem('user', JSON.stringify(foundUser));
           const redirectTo = foundUser.staff === 'T' ? '/Dogs2' : '/Dogs3';
-          navigate(redirectTo, { replace: true });
+          navigate(redirectTo, { state: { username: foundUser.username, email: foundUser.email } });
         } else {
           message.error('Invalid username or password.');
         }

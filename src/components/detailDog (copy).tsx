@@ -4,23 +4,22 @@ import { Card, Col, Row, Image, Button } from 'antd';
 import { api } from './common/http-common';
 import axios from 'axios';
 
-
 const DetailDog = () => {
-  const { id } = useParams();
+  const {uid} = useParams();
   const navigate= useNavigate();
 
   const [dogs, setDogs] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
-  
-  React.useEffect(() => {
-    axios.get(`${api.uri}/dogs/${id}`)
-      .then((res) => {
+
+  React.useEffect(()=>{
+    axios.get(`${api.uri}/dogs/${uid}`)
+      .then((res)=>{
         setDogs(res.data);
       })
-      .then(() => {
+      .then(()=>{
         setLoading(false);
-      });
-  }, [id]);
+      })
+  }, []);
 
   if(loading){
 
@@ -39,7 +38,7 @@ const DetailDog = () => {
               <Col key={dogs.id}>
                 <Card title={dogs.name} style={{width: 700} }>
                   <pre>       ID:         {dogs.id}</pre>
-                  <pre>       Breed:      {dogs.breeds}</pre>
+                  <pre>       Breed:      {dogs.breed}</pre>
                   <pre>       Gender:     {dogs.gender}</pre>
                   <pre>       Birth:      N\A </pre>
                   <pre>       Centre:     {dogs.centre}</pre>

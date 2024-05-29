@@ -1,53 +1,108 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Card, Button, Modal, Form, Input } from 'antd';
 import axios from 'axios';
 
-function EnquiryForm() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [position, setPosition] = useState('');
+const ApplicationForm = () => {
+  const location = useLocation();
+  const { applicationData } = location.state;
+  const { username, dogId, dogName, dogCenter, email, dogBreed, applicationDate } = applicationData;
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editedMessage, setEditedMessage] = useState(getDefaultMessage());
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  function getDefaultMessage() {
+    return `Dear Sir/Madam,
 
-    const enquiryData = {
-      name,
-      email,
-      position,
-    };
+I would like to adopt the dog with the following details:
 
+Dog ID: ${dogId}
+
+Dog Name: ${dogName}
+
+Dog Breed: ${dogBreed}
+
+Center: ${dogCenter}
+
+Email Address: ${email}
+
+Thank you.
+
+${username}.`;
+  }
+
+  const handleFormSubmit = async () => {
     try {
-      await axios.post('/api/applications', applicationData);
-      alert('Application submitted successfully!');
-      // Reset the form after successful submission
-      setName('');
-      setEmail('');
-      setPosition('');
+      const response = await axios.post('/api/v1/application', {
+        dogId,
+        dogName,
+        dogCenter,
+        username,
+        email,
+        dogBreed,
+        applicationDate,
+        message: editedMessage,
+      });
+
+      console.log('Application submitted successfully:', response.data);
+      // Optionally, you can display a success message to the user or redirect to another page.
     } catch (error) {
-      console.error('Error submitting application:', error);
-      alert('An error occurred while submitting the application. Please try again.');
+      console.error('Failed to submit application:', error);
+      // Handle the error condition, such as displaying an error message to the user.
     }
+  };
+
+  const handleEditClick = () => {
+    setIsEditMode(true);
+  };
+
+  const handleCancel = () => {
+    setIsEditMode(false);
+  };
+
+  const handleSave = () => {
+    setIsEditMode(false);
+  };
+
+  const handleInputChange = (e) => {
+    setEditedMessage(e.target.value);
   };
 
   return (
     <div>
-      <h2>Application Form</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Name:
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-        </label>
-        <label>
-          Email:
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </label>
-        <label>
-          Application:
-          <input type="text" value={position} onChange={(e) => setPosition(e.target.value)} required />
-        </label>
-        <button type="submit">Submit</button>
-      </form>
+      <h2>Apply for Adoption</h2>
+      <Card title="Application Details" style={{ width: 400 }}>
+        <p>{applicationDate}</p>
+        <pre>{editedMessage}</pre>
+      </Card>
+      {isEditMode ? (
+        <Modal
+          visible={true}
+          title="Edit Application Message"
+          onCancel={handleCancel}
+          onOk={handleSave}
+          okText="Save"
+          cancelText="Cancel"
+        >
+          <Form>
+            <Form.Item label="Message">
+              <Input.TextArea
+                value={editedMessage}
+                onChange={handleInputChange}
+                autoSize={{ minRows: 4, maxRows: 30 }} // Adjust the number of rows here
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
+      ) : (
+        <Button type="primary" onClick={handleEditClick}>
+          Edit
+        </Button>    
+      )}
+      <Button type="primary" onClick={handleFormSubmit}>
+        Send
+      </Button>
     </div>
   );
-}
+};
 
-export default EnquiryForm;
+export default ApplicationForm;
