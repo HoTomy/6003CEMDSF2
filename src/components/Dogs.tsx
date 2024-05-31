@@ -48,7 +48,7 @@ const Dogs = ({ username, email }) => {
     return (
       <div>
         <div>
-          <h2>Welcome!</h2>
+          <h2>Welcome, please login for more action!</h2>
           <Select
             value={genderFilter}
             onChange={handleGenderFilterChange}

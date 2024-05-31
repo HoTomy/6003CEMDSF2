@@ -1,77 +1,71 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Row, Col, Card, Button } from 'antd';
 import { api } from './common/http-common';
 
 const UserM = () => {
-  const [users, setUsers] = useState([]);
+  const [user, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(`${api.uri}/user`);
         setUsers(response.data);
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         console.error('Error fetching users:', error);
       }
     };
     fetchUsers();
   }, []);
 
-  const handleDelete = async (id) => {
+  const handleDeleteAccount = async (index) => {
     try {
-      await axios.delete(`${api.uri}/user/${id}`);
-      setUsers(users.filter((user) => user.id !== id));
+      const userId = user[index].id;
+      await axios.delete(`${api.uri}/user/${index}`);
+      // Update the local state to remove the deleted user
+      const updatedUsers = [...user];
+      updatedUsers.splice(index, 1);
+      setUsers(updatedUsers);
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('Error deleting user account:', error);
     }
   };
 
-  const staffUsers = users.filter((user) => user.staff === 'T');
-  const nonStaffUsers = users.filter((user) => user.staff === 'F');
-
   return (
     <div>
-      <h1>User Management</h1>
-
-      <h2>Staff Users</h2>
-      <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '70px' }}>
-        <thead>
-          <tr>
-            <th style={{ padding: '10px', textAlign: 'left' }}>Username</th>
-            <th style={{ padding: '10px', textAlign: 'left' }}>Email</th>
-          </tr>
-        </thead>
-        <tbody>
-          {staffUsers.map((user, index) => (
-            <tr key={index} style={{ borderBottom: '1px solid #ddd' }}>
-              <td style={{ padding: '10px' }}>{user.username}</td>
-              <td style={{ padding: '10px' }}>{user.email}</td>
-            </tr>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <Row gutter={[16, 16]}>
+          {user.map((user, index) => (
+            <Col key={index} span={8}>
+              <Card>
+                <p>Username: {user.username}</p>
+                <p>Email: {user.email}</p>
+                {user.staff === 'T' && (
+                  <p>
+                    <span style={{ color: 'blue' }}>Staff</span>
+                  </p>
+                )}
+                {user.staff === 'F' && (
+                  <Button
+                    type="primary"
+                    danger
+                    style={{ marginBottom: 10 }}
+                    onClick={() => handleDeleteAccount(index)}
+                  >
+                    Delete Account
+                  </Button>
+                )}
+              </Card>
+            </Col>
           ))}
-        </tbody>
-      </table>
-
-      <h2>Non-Staff Users</h2>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead>
-          <tr>
-            <th style={{ padding: '10px', textAlign: 'left' }}>Username</th>
-            <th style={{ padding: '10px', textAlign: 'left' }}>Email</th>
-            <th style={{ padding: '10px', textAlign: 'left' }}>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {nonStaffUsers.map((user, index) => (
-            <tr key={index} style={{ borderBottom: '1px solid #ddd' }}>
-              <td style={{ padding: '10px' }}>{user.username}</td>
-              <td style={{ padding: '10px' }}>{user.email}</td>
-              <td style={{ padding: '10px' }}>
-                <button onClick={() => handleDelete(user.id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        </Row>
+      )}
     </div>
   );
 };
