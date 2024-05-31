@@ -1,84 +1,107 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Col, Row, Image, Button } from 'antd';
+import { Link } from 'react-router-dom';
+import { Card, Col, Row, Image, Space, Button, Select, Input } from 'antd';
 import { api } from './common/http-common';
 import axios from 'axios';
 
-const DetailDog = () => {
-  const {uid} = useParams();
-  const navigate= useNavigate();
+const { Option } = Select;
 
+const Dogs = () => {
   const [dogs, setDogs] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
+  const [breedFilter, setBreedFilter] = React.useState('');
+  const [genderFilter, setGenderFilter] = React.useState('');
+  const [centerFilter, setCenterFilter] = React.useState('');
 
-  React.useEffect(()=>{
-    axios.get(`${api.uri}/dogs/${uid}`)
-      .then((res)=>{
+  React.useEffect(() => {
+    axios.get(`${api.uri}/dogs`)
+      .then((res) => {
         setDogs(res.data);
       })
-      .then(()=>{
+      .then(() => {
         setLoading(false);
-      })
+      });
   }, []);
 
-  if(loading){
+  const handleBreedFilterChange = (value) => {
+    setBreedFilter(value);
+  };
 
-    return(<div>Loading ...</div>)
+  const handleGenderFilterChange = (value) => {
+    setGenderFilter(value);
+  };
 
+  const handleCenterFilterChange = (value) => {
+    setCenterFilter(value);
+  };
+
+  const filteredDogs = dogs?.filter((dog) =>
+    (breedFilter === '' || dog.breeds.toLowerCase().includes(breedFilter.toLowerCase())) &&
+    (genderFilter === '' || dog.gender.toLowerCase() === genderFilter.toLowerCase()) &&
+    (centerFilter === '' || dog.centre.toLowerCase() === centerFilter.toLowerCase()) &&
+    dog.status.toLowerCase() === 'available'
+  );
+
+  if (loading) {
+    return <div>Loading...</div>;
   } else {
-    if(!dogs){
-      return(<div>There is no dog available now.</div>)
+    if (!dogs) {
+      return <div>There are no dogs available now.</div>;
     } else {
-      let birthday = [dogs.birth];
-
-      if ( birthday[0] == null ){
-        return(
-        <Row justify="center">
-          {
-              <Col key={dogs.id}>
-                <Card title={dogs.name} style={{width: 700} }>
-                  <pre>       ID:         {dogs.id}</pre>
-                  <pre>       Breed:      {dogs.breed}</pre>
-                  <pre>       Gender:     {dogs.gender}</pre>
-                  <pre>       Birth:      N\A </pre>
-                  <pre>       Centre:     {dogs.centre}</pre>
-                  <pre>       Remark:     {dogs.remark}</pre>
-                  <pre>       Status:     {dogs.status}</pre>
-                  <pre>       <Image width={500} height={500} src={dogs.imageurl} /></pre>
-                  <br/>
-                  <br/>
-                  <div align="right"><Button type="primary" onClick={()=>navigate(-1)}>Back</Button></div>
-                </Card>
-              </Col>
-          }
-        </Row>
-      )
-      } else {
-        return(
-        <Row justify="center">
-          {
-              <Col key={dogs.id}>
-                <Card title={name} style={{width: 700} }>
-                  <pre>       ID:         {dogs.id}</pre>
-                  <pre>       Name:       {dogs.name}</pre>
-                  <pre>       Breed:      {dogs.breeds}</pre>
-                  <pre>       Gender:     {dogs.gender}</pre>
-                  <pre>       Birth:      {dogs.birth} </pre>
-                  <pre>       Centre:     {dogs.centre}</pre>
-                  <pre>       Remark:     {dogs.remark}</pre>
-                  <pre>       Status:     {dogs.status}</pre>
-                  <pre>       <Image width={500} height={500} src={dogs.imageurl} /></pre>
-                  <br/>
-                  <br/>
-                  <div align="right"><Button type="primary" onClick={()=>navigate(-1)}>Back</Button></div>
-                </Card>
-              </Col>
-          }
-        </Row>
-      )
-      }
+      return (
+        <div>
+          <div>
+            <Select
+              value={genderFilter}
+              onChange={handleGenderFilterChange}
+              placeholder="Filter by gender"
+              style={{ width: 200, marginRight: 10 }}
+            >
+              <Option value="">Gender</Option>
+              <Option value="male">Male</Option>
+              <Option value="female">Female</Option>
+            </Select>
+            <Select
+              value={centerFilter}
+              onChange={handleCenterFilterChange}
+              placeholder="Filter by center"
+              style={{ width: 200 }}
+            >
+              <Option value="">Centre</Option>
+              <Option value="HK">HK</Option>
+              <Option value="KL">KL</Option>
+              <Option value="NT">NT</Option>
+            </Select>
+            <Input
+              value={breedFilter}
+              onChange={(e) => handleBreedFilterChange(e.target.value)}
+              placeholder="Filter by breed"
+            />
+          </div>
+          <Row>
+            {filteredDogs.length === 0 ? (
+              <div>No dogs match the filter criteria.</div>
+            ) : (
+              filteredDogs.map(({ id, name, breeds, gender, centre, imageurl, birth, remark, status }) => (
+                <Col span={8} key={name}>
+                  <Card title={name} style={{ width: 400, height: 600 }}>
+                    <Image width={300} height={300} src={imageurl} />
+                    <pre>ID: {id}    Centre:  {centre}    Gender:  {gender}</pre>
+                    <pre>Birth:  {birth}    Status:  {status}</pre>
+                    <pre>Breed:  {breeds}</pre>
+                    <pre>Remark:  {remark}</pre>
+                    <p></p>
+                    <Space wrap>
+                    </Space>
+                  </Card>
+                </Col>
+              ))
+            )}
+          </Row>
+        </div>
+      );
     }
   }
-}
+};
 
-export default DetailDog;
+export default Dogs;

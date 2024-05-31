@@ -10,8 +10,9 @@ import DogAPI from './components/Dogapi1';
 import NewDog from './components/NewDog';
 import DeleteDog from './components/DeleteDog';
 import DetailDog from './components/detailDog';
-
 import ApplicationForm from './components/ApplicationForm';
+import ApplM from './components/applm';
+import UserM from './components/userm';
 
 
 const { Header, Content, Footer } = Layout;
@@ -23,12 +24,11 @@ export default function App() {
       <Header>
         <nav>
           <Space>
-            <Link to="/">Home</Link>
-            <Link to="/Dogs">Dog List</Link>
-            <Link to="/Login">Login</Link>
-            <Link to="/Register">Register</Link>
-            <Link to="/ApplicationForm">Application Form</Link>
-            <Link to="/Dogapi1">Search Dog Breed</Link>
+            <Link to="/">[ Home ]</Link>
+            <Link to="/Dogs">[ Available Dog ] </Link>
+            <Link to="/Login">[ Login ]</Link>
+            <Link to="/Register">[ Register ]</Link>
+            <Link to="/Dogapi1">[ Dog Breed ]</Link>
             <Link to="/Dogs2"></Link>
             <Link to="/Dogs3"></Link>
           </Space>
@@ -47,7 +47,8 @@ export default function App() {
           <Route path="/NewDog" element={<NewDog />} />
           <Route path="/Dogs2" element={<Dogs2 />} />
           <Route path="/Dogs3" element={<Dogs3 />} />
-
+          <Route path="/applm" element={<ApplM />} />
+          <Route path="/userm" element={<UserM />} />
 
         </Routes>
       </Content>

@@ -35,13 +35,7 @@ function Home() {
             </Link>
           </div>
         </div>
-        <div className="button-row" style={{ marginBottom: '10px' }}>
-          <div>
-            <Link to="/ApplicationForm">
-              <button className="custom-button" style={{ width: '200px', fontSize: '16px' }}>Application Form</button>
-            </Link>
-          </div>
-        </div>
+
         <div className="button-row" style={{ marginBottom: '10px' }}>
           <div>
             <Link to="/Dogapi1">

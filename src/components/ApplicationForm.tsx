@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { Card, Button, Modal, Form, Input } from 'antd';
 import axios from 'axios';
+import { api } from './common/http-common';
 
 const ApplicationForm = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { applicationData } = location.state;
   const { username, dogId, dogName, dogCenter, email, dogBreed, applicationDate } = applicationData;
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedMessage, setEditedMessage] = useState(getDefaultMessage());
+  const [isApplicationSubmitted, setIsApplicationSubmitted] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   function getDefaultMessage() {
     return `Dear Sir/Madam,
@@ -32,19 +36,17 @@ ${username}.`;
 
   const handleFormSubmit = async () => {
     try {
-      const response = await axios.post('/api/v1/application', {
+      const response = await axios.post(`${api.uri}/application`, {
         dogId,
-        dogName,
-        dogCenter,
         username,
         email,
-        dogBreed,
         applicationDate,
         message: editedMessage,
       });
 
       console.log('Application submitted successfully:', response.data);
-      // Optionally, you can display a success message to the user or redirect to another page.
+      setIsApplicationSubmitted(true);
+      setShowSuccessModal(true);
     } catch (error) {
       console.error('Failed to submit application:', error);
       // Handle the error condition, such as displaying an error message to the user.
@@ -66,6 +68,15 @@ ${username}.`;
   const handleInputChange = (e) => {
     setEditedMessage(e.target.value);
   };
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
+    navigate('/', { state: { successMessage: 'Your application has been submitted successfully!' } });
+  };
+
+  if (isApplicationSubmitted) {
+    return null; // Return null to prevent rendering the rest of the component
+  }
 
   return (
     <div>
@@ -94,13 +105,34 @@ ${username}.`;
           </Form>
         </Modal>
       ) : (
-        <Button type="primary" onClick={handleEditClick}>
-          Edit
-        </Button>    
+        <div>
+          <Button type="primary" onClick={handleEditClick}>
+            Edit
+          </Button>
+          <Button type="primary" onClick={handleFormSubmit}>
+            Send
+          </Button>
+          <Button type="primary">
+            <Link to={`/`}>Home</Link>
+          </Button>
+          
+        </div>
       )}
-      <Button type="primary" onClick={handleFormSubmit}>
-        Send
-      </Button>
+
+      {showSuccessModal && (
+        <Modal
+          visible={showSuccessModal}
+          title="Application Submitted"
+          onCancel={handleCloseSuccessModal}
+          footer={[
+            <Button key="close" onClick={handleCloseSuccessModal}>
+              Close
+            </Button>,
+          ]}
+        >
+          <p>Your application has been submitted successfully!</p>
+        </Modal>
+      )}
     </div>
   );
 };

@@ -30,7 +30,7 @@ const Login = () => {
       })
       .catch((error) => {
         message.error('An error occurred. Please try again.');
-        navigate('/ApplicationForm', { replace: true });
+        //navigate('/ApplicationForm', { replace: true });
       });
   };
   

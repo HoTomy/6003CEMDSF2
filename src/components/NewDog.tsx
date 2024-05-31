@@ -102,7 +102,7 @@ const NewDog = () => {
           allowClear
         >
           <Option value="Available">Available</Option>
-          <Option value="Not available">Not available</Option>
+          <Option value="Adopted">Adopted</Option>
         </Select>
       </Form.Item>
       <Form.Item>
